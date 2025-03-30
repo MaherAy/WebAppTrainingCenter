@@ -5,13 +5,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.Set;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-
 public class Participant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,17 +29,23 @@ public class Participant {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "structure_id")
     private Structure structure;
-    @Transient  // N'est pas persisté en base (calculé dynamiquement)
+
+    @ManyToMany
+    @JoinTable(
+            name = "participant_formation",
+            joinColumns = @JoinColumn(name = "participant_id"),
+            inverseJoinColumns = @JoinColumn(name = "formation_id"))
+    private Set<Formation> formations;
+
+    @Transient
     public int getIdStructure() {
         return (this.structure != null) ? this.structure.getId() : 0;
     }
 
-    // Méthode pour définir la structure par son ID
     public void setIdStructure(int idStructure) {
         if (this.structure == null) {
             this.structure = new Structure();
         }
         this.structure.setId(idStructure);
     }
-
 }

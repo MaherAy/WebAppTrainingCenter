@@ -1,6 +1,7 @@
 package com.example.cFormation.controllers;
 
 import com.example.cFormation.dto.ParticipantDTO;
+import com.example.cFormation.models.Formation;
 import com.example.cFormation.models.Participant;
 import com.example.cFormation.services.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/participants")
@@ -77,5 +79,11 @@ public class ParticipantController {
     @GetMapping("/by-profile/{profileId}")
     public List<Participant> getParticipantsByProfile(@PathVariable int profileId) {
         return participantService.getParticipantsByProfileId(profileId);
+    }
+    @GetMapping("/{participantId}/formations")
+    public ResponseEntity<Set<Formation>> getParticipantFormations(
+            @PathVariable int participantId) {
+
+        return ResponseEntity.ok(participantService.getParticipantFormations(participantId));
     }
 }

@@ -3,6 +3,7 @@ package com.example.cFormation.services;
 import com.example.cFormation.dto.ParticipantDTO;
 import com.example.cFormation.exception.ResourceNotFoundException;
 import com.example.cFormation.mapper.ParticipantMapper;
+import com.example.cFormation.models.Formation;
 import com.example.cFormation.models.Participant;
 import com.example.cFormation.models.Profile;
 import com.example.cFormation.models.Structure;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ParticipantService {
@@ -93,5 +95,10 @@ public class ParticipantService {
                         new EntityNotFoundException("Profil non trouvé avec l'ID: " + profileId));
 
         return participantRepository.findByProfile_Id(profileId);
+    }
+    public Set<Formation> getParticipantFormations(int participantId) {
+        Participant participant = participantRepository.findById(participantId)
+                .orElseThrow(() -> new RuntimeException("Participant non trouvé"));
+        return participant.getFormations();
     }
 }
