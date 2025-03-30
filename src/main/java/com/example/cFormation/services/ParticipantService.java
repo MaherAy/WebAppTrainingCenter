@@ -1,5 +1,8 @@
 package com.example.cFormation.services;
 
+import com.example.cFormation.dto.ParticipantDTO;
+import com.example.cFormation.exception.ResourceNotFoundException;
+import com.example.cFormation.mapper.ParticipantMapper;
 import com.example.cFormation.models.Participant;
 import com.example.cFormation.models.Profile;
 import com.example.cFormation.models.Structure;
@@ -18,10 +21,12 @@ public class ParticipantService {
     private final ParticipantRepository participantRepository;
     private final ProfileRepository profileRepository;
     private final StructureRepository structureRepository;
-    public ParticipantService(ParticipantRepository participantRepository, ProfileRepository profileRepository, StructureRepository structureRepository) {
+    private final ParticipantMapper participantMapper; // Injection du Mapper
+    public ParticipantService(ParticipantRepository participantRepository, ProfileRepository profileRepository, StructureRepository structureRepository, ParticipantMapper participantMapper) {
         this.participantRepository = participantRepository;
         this.profileRepository = profileRepository;
         this.structureRepository = structureRepository;
+        this.participantMapper = participantMapper;
     }
 
     public List<Participant> getAllParticipants() {
@@ -32,7 +37,13 @@ public class ParticipantService {
         return participantRepository.findById(id);
     }
 
+    public ParticipantDTO getParticipantDTOById(int id) {
+        Participant participant = participantRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Participant non trouvé"));
 
+        return participantMapper.toDto(participant); // Utilisation correcte
+
+    }
 
     public Participant createParticipant(Participant participant, int profileId, int structureId) {
         Profile profile = profileRepository.findById(profileId)

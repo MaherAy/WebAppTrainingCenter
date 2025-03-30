@@ -1,5 +1,6 @@
 package com.example.cFormation.controllers;
 
+import com.example.cFormation.dto.ParticipantDTO;
 import com.example.cFormation.models.Participant;
 import com.example.cFormation.services.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +33,18 @@ public class ParticipantController {
     }
 
     // Récupération par ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Participant> getParticipantById(@PathVariable int id) {
+   /* @GetMapping("/{id}")
+    public ResponseEntity<ParticipantDTO> getParticipantById(@PathVariable int id) {
         return participantService.getParticipantById(id)
+                .map(participant -> modelMapper.map(participant, ParticipantDTO.class))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }*/
+    @GetMapping("/{id}")
+    public ResponseEntity<ParticipantDTO> getParticipantById(@PathVariable int id) {
+        ParticipantDTO participantDTO = participantService.getParticipantDTOById(id);
+        return ResponseEntity.ok(participantDTO);
     }
-
     // Liste complète
     @GetMapping
     public List<Participant> getAllParticipants() {

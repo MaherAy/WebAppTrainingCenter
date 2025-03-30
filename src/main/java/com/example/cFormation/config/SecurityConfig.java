@@ -16,7 +16,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Désactive CSRF
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/participants", "/profiles","/structures" ,"/login", "/authenticate").permitAll() // Accès libre
+                        .requestMatchers("/participants","/participants/**", "/profiles/**","/structures" ,"/login", "/authenticate").permitAll() // Accès libre
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Accès restreint
                         .anyRequest().authenticated() // Toute autre requête nécessite une authentification
                 )
